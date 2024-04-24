@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zain's Password Generator</title>
     <style>
         body {
-            background-image: url('https://getwallpapers.com/wallpaper/full/e/8/5/719190-gorgerous-beautiful-background-images-1920x1200-for-iphone-7.jpg'); /* Background Image*/
+            background-image: url('https://getwallpapers.com/wallpaper/full/e/8/5/719190-gorgerous-beautiful-background-images-1920x1200-for-iphone-7.jpg');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -168,6 +167,7 @@
   <div id="passwordLengthDisplay"></div> <!-- Moved above the generate password container -->
   <div id="generatePasswordContainer">
       <button id="GeneratePasswordButton" onclick="generatePassword()">Generate Password</button>
+      <button id="CopyPasswordButton" onclick="copyToClipboard()">Copy Password</button> <!-- Added button to copy password -->
   </div>
   <div id="passwordDisplay"></div>
 </div>
@@ -216,7 +216,28 @@ function closeFeedbackContainer() {
     document.getElementById("feedbackContainer").style.display = "none";
 }
 
-
+// Function to copy password to clipboard
+function copyToClipboard() {
+    // Get the displayed password
+    const passwordDisplay = document.getElementById("passwordDisplay").innerText;
+    // Extract the password part by splitting the string and getting the second part
+    const password = passwordDisplay.split(": ")[1];
+    
+    // Create a temporary textarea element
+    const textarea = document.createElement("textarea");
+    // Set the value of the textarea to the extracted password
+    textarea.value = password;
+    
+    // Append the textarea to the document body
+    document.body.appendChild(textarea);
+    // Select the text inside the textarea
+    textarea.select();
+    // Copy the selected text to the clipboard
+    document.execCommand("copy");
+    // Remove the temporary textarea from the document body
+    document.body.removeChild(textarea);
+    alert("Password Copied to Clipboard")
+}
 </script>
 </body>
 </html>
