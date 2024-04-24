@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zain's Password Generator</title>
+    <style>
+        body {
+            background-image: url('https://getwallpapers.com/wallpaper/full/e/8/5/719190-gorgerous-beautiful-background-images-1920x1200-for-iphone-7.jpg'); /* Background Image*/
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            width: 200px;
+            height: 10px;
+            -webkit-appearance: none; /* Remove default styling */
+            appearance: none;
+            background: #ddd; /* Track background color */
+            border-radius: 5px; /* Rounded track */
+            outline: none; /* Remove outline */
+            transition: background 0.2s; /* Smooth transition */
+            top: 400px;
+            left: 44.55%;
+        }
+        #feedbackContainer {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 999;
+            height: 200px;
+            width: 200px;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        
+        /* Keyframes for fade in animation */
+        @keyframes fadeInUp {
+            0% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        #feedbackButton {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid transparent;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        
+        #feedbackButton:hover {
+            transform: translate(-50%, -3%) scale(1.1);
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.8);
+            border-color: transparent;
+        }
+        
+        .close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 28px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            float: right;
+            font-weight: light;
+            color: black;
+        }
+        
+        .slider:hover {
+            background: #ccc; /* Hover effect on track */
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Remove default styling */
+            appearance: none;
+            width: 20px; /* Thumb width */
+            height: 20px; /* Thumb height */
+            background: #000000; /* Thumb color */
+            border-radius: 50%; /* Rounded thumb */
+            cursor: pointer;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3); /* Thumb shadow */
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 20px; /* Thumb width */
+            height: 20px; /* Thumb height */
+            background: #ffffff; /* Thumb color */
+            border-radius: 50%; /* Rounded thumb */
+            cursor: pointer;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3); /* Thumb shadow */
+        }
+        
+        #passwordLengthDisplay {
+            background-color: white;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center; /* Center the text */
+        }
+        
+        #passwordDisplay {
+            background-color: white;
+            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 10px; /* Add margin at the bottom */
+            text-align: center; /* Center the text */
+        }
+        
+        #generatePasswordContainer {
+            text-align: center; /* Center the button */
+        }
+        
+        /* Styles for the button */
+        #GeneratePasswordButton {
+            width: 200px; /* Adjust width as needed */
+            height: 40px; /* Adjust height as needed */
+            font-size: 16px;
+            margin-top: 10px; /* Add space above buttons */
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #ffffff; /* White background */
+            color: #000000; /* Black text color */
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.6);
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+<body>
+  
+  <div id="feedbackContainer">
+    <button class="close" onclick="closeFeedbackContainer()">&times;</button>
+    <p>Use the Slider to Change the length!</p>
+</div>
+<div class="container">
+  <input type="range" min="6" max="20" value="8" class="slider" id="passwordLengthSlider">
+  <div id="passwordLengthDisplay"></div> <!-- Moved above the generate password container -->
+  <div id="generatePasswordContainer">
+      <button id="GeneratePasswordButton" onclick="generatePassword()">Generate Password</button>
+  </div>
+  <div id="passwordDisplay"></div>
+</div>
+
+
+<script>
+    // Function to generate a random string of specified length
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    function generatePassword() {
+        let length = document.getElementById('passwordLengthSlider').value; // Get the length from the slider
+        let password = ''; // Initialize an empty string to store the password
+            // Loop to generate random characters and append them to the password
+            for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length); // Generate a random index
+            password += characters.charAt(randomIndex); // Append a random character to the password
+        }
+
+        // Display the generated password
+        document.getElementById("passwordDisplay").innerText = "Your password: " + password;
+
+    }
+    const slider = document.getElementById('passwordLengthSlider');
+
+slider.addEventListener('input', function() {
+    const sliderValue = slider.value;
+    document.getElementById('passwordLengthDisplay').textContent = `Password Length: ${sliderValue}`;
+});
+
+// Function to set password length display on page load
+function setPasswordLengthDisplay() {
+    const initialValue = slider.value;
+    document.getElementById('passwordLengthDisplay').textContent = `Password Length: ${initialValue}`;
+}
+setPasswordLengthDisplay(); // Call the function on page load
+
+function showFeedbackButton() {
+    setTimeout(function() {
+        document.getElementById("feedbackContainer").style.display = "block";
+    }, 2000);
+}
+window.addEventListener('load', function() {
+    showFeedbackButton();
+});
+function closeFeedbackContainer() {
+    document.getElementById("feedbackContainer").style.display = "none";
+}
+
+
+</script>
+</body>
+</html>
